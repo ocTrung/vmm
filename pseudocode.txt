@@ -1,0 +1,17 @@
+get virtual address request
+
+get page_num, offset
+
+get frame num:
+  check TLB
+  TLB returns frame_num or -1(tlb miss)
+  if (tlb miss)
+    check page table
+      return frame_num or handle 'page fault'
+
+(page fault)
+  find_free_frame()
+  load page into free_frame
+  update TLB and page_table
+
+
