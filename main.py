@@ -1,9 +1,6 @@
 from os import write
 import numpy as np
 from vmem import *
-
-# Purpose: Simulate Virtual Memory 
-# Author: Trung Nguyenvo
  
 output_list = []
 page_fault_count = 0.0
@@ -28,10 +25,6 @@ for n in range(NUM_FRAMES):
 with open('addresses.txt') as f:
   for line in f:
     la_list.append(int(line))
-
-# f = open('addresses.txt', "r")
-# la_list.append(int(f.readline()))
-# f.close()
 
 for la_int in la_list: 
   
@@ -82,15 +75,18 @@ for la_int in la_list:
   # read data at physical address then print it
   data = frame_arr[frame_number]
   val = getVal(data, offset)
-
+  
   # calculate Physical Address as an integer 
   pa_int = paToInt(frame_number, offset)
   
   output_list.append(f'Virtual address: {la_int} Physical address: {pa_int} Value: {val}\n')
 
+# Print Statistics
 tlb_hr = tlb_hit_count/1000 * 100
 tlb_hr = "{:.2f}".format(tlb_hr)
 print(f'TLB Hit rate: {tlb_hr}%\nPage-Fault rate: {page_fault_count/1000 * 100}%')
+
+# Output to file
 f = open('output.txt', "w")
 for line in output_list:
     f.write(line)
