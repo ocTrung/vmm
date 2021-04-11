@@ -4,13 +4,6 @@ from vmem import *
 
 # Purpose: Simulate Virtual Memory 
 # Author: Trung Nguyenvo
-
-# 1 - request for memory is made
-# 2 = PAGE and OFFSET is extracted from memory address
-# 3 - reference TLB for FRAME number using PAGE number
-# 4 - if TLB miss, check PAGETABLE
-# 5 = if PAGE fault, load 256 byte PAGE from BACKING_STORE to available FRAME, update PAGETABLE and TLB
-# 5 - Go to frame and print byte
  
 output_list = []
 page_fault_count = 0.0
@@ -21,11 +14,11 @@ NUM_PAGES = 256
 NUM_FRAMES = 128
 TLB_SIZE = 16
 page_table = np.full(NUM_PAGES, -1)
-frame_arr = []
-free_frames_list = []
 la_list = [] # list of logical addresses
-local_tlb = tlb(16)
-lru = [] 
+frame_arr = [] # physical memory 
+free_frames_list = [] 
+local_tlb = tlb(TLB_SIZE)
+lru = [] # LRU for page replacement
 
 for n in range(NUM_FRAMES):
   free_frames_list.append(n)
