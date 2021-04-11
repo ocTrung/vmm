@@ -71,8 +71,6 @@ for la_int in la_list:
         # get least recently used page
         free_frame_num = page_table[lru.pop(0)]
 
-      print(f'free frame:{free_frame_num}')
-
       # Read in page from BACKING_STORE into free frame
       page_data = demandPage(page_num)
       frame_arr[free_frame_num] = page_data
@@ -90,10 +88,9 @@ for la_int in la_list:
   
   output_list.append(f'Virtual address: {la_int} Physical address: {pa_int} Value: {val}\n')
 
-# for line in output_list:
-#   print(line)
-
-print(f'TLB Hit rate: {tlb_hit_count/1000 * 100}% Page-Fault rate: {page_fault_count/1000 * 100}%')
+tlb_hr = tlb_hit_count/1000 * 100
+tlb_hr = "{:.2f}".format(tlb_hr)
+print(f'TLB Hit rate: {tlb_hr}%\nPage-Fault rate: {page_fault_count/1000 * 100}%')
 f = open('output.txt', "w")
 for line in output_list:
     f.write(line)
