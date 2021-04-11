@@ -18,15 +18,16 @@ tlb_hit_count = 0.0
 
 PAGE_SIZE = 256
 NUM_PAGES = 256
-NUM_FRAMES = 256
+NUM_FRAMES = 128
 TLB_SIZE = 16
 page_table = np.full(NUM_PAGES, -1)
 frame_arr = []
 free_frames_list = []
 la_list = [] # list of logical addresses
 local_tlb = tlb(16)
+lru = [] 
 
-for n in range(256):
+for n in range(NUM_FRAMES):
   free_frames_list.append(n)
   frame_arr.append(-1)
 
@@ -51,25 +52,34 @@ for la_int in la_list:
   page_num = la["page"]
   offset = la["offset"]
 
-  # (3) Find frame number
+  # update LRU
+  if page_num in lru: 
+    lru.remove(page_num)
+  lru.append(page_num)
+
+  # Find frame number
   try:
     frame_number = local_tlb.findFrame(page_num)
     tlb_hit_count += 1
-
-    # print(f'TLB hit: Page-{page_num} Frame-{frame_number}')
   except KeyError:
-    # print(f'TLB miss: Page-{page_num} not found!')
     state = 'tlb-miss'
 
+  # Check page table for frame number
   if (state == 'tlb-miss'):
-    # Reference page table for frame number
     frame_number = page_table[page_num]
-
-    # handle page-fault
+    
+    # if page-fault
     if (frame_number == -1):
       page_fault_count += 1 
       # Find a free frame
-      free_frame_num = free_frames_list.pop(0)
+      try:
+        free_frame_num = free_frames_list.pop(0)
+      except IndexError:
+        # get least recently used page
+        free_frame_num = page_table[lru.pop(0)]
+
+      print(f'free frame:{free_frame_num}')
+
       # Read in page from BACKING_STORE into free frame
       page_data = demandPage(page_num)
       frame_arr[free_frame_num] = page_data
@@ -90,7 +100,7 @@ for la_int in la_list:
 # for line in output_list:
 #   print(line)
 
-# print(f'TLB Hit rate: {tlb_hit_count/1000 * 100}% Page-Fault rate: {page_fault_count/1000 * 100}%')
+print(f'TLB Hit rate: {tlb_hit_count/1000 * 100}% Page-Fault rate: {page_fault_count/1000 * 100}%')
 f = open('output.txt', "w")
 for line in output_list:
     f.write(line)
