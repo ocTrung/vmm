@@ -56,7 +56,7 @@ for la_int in la_list:
     frame_number = local_tlb.findFrame(page_num)
     tlb_hit_count += 1
 
-    print(f'TLB hit: Page-{page_num} Frame-{frame_number}')
+    # print(f'TLB hit: Page-{page_num} Frame-{frame_number}')
   except KeyError:
     # print(f'TLB miss: Page-{page_num} not found!')
     state = 'tlb-miss'
@@ -76,8 +76,6 @@ for la_int in la_list:
       # Update TLB and Page Table
       page_table[page_num] = free_frame_num
       frame_number = free_frame_num
-      # tlb[page_num] = frame_number
-      # print(f'tlb {tlb}')
       local_tlb.update(page_num, frame_number)
 
   # read data at physical address then print it
@@ -87,13 +85,12 @@ for la_int in la_list:
   # calculate Physical Address as an integer 
   pa_int = paToInt(frame_number, offset)
   
-  print(f'Virtual address: {la_int} Physical address: {pa_int} Value: {val}')
   output_list.append(f'Virtual address: {la_int} Physical address: {pa_int} Value: {val}\n')
 
 # for line in output_list:
 #   print(line)
 
-print(f'TLB Hit rate: {tlb_hit_count/1000 * 100}% Page-Fault rate: {page_fault_count/1000 * 100}%')
+# print(f'TLB Hit rate: {tlb_hit_count/1000 * 100}% Page-Fault rate: {page_fault_count/1000 * 100}%')
 f = open('output.txt', "w")
 for line in output_list:
     f.write(line)
