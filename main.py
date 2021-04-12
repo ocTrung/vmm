@@ -62,7 +62,9 @@ for la_int in la_list:
         free_frame_num = free_frames_list.pop(0)
       except IndexError:
         # get least recently used page
-        free_frame_num = page_table[lru.pop(0)]
+        target = lru.pop(0)
+        free_frame_num = page_table[target]
+        page_table[target] = -1
 
       # Read in page from BACKING_STORE into free frame
       page_data = demandPage(page_num)
