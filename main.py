@@ -64,7 +64,7 @@ for la_int in la_list:
         # get least recently used page
         target = lru.pop(0)
         free_frame_num = page_table[target]
-        page_table[target] = -1
+        page_table[target] = -1 # replace the old entry in Page Table 
 
       # Read in page from BACKING_STORE into free frame
       page_data = demandPage(page_num)
